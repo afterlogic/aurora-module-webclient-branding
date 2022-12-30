@@ -75,50 +75,50 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			'TopIframeHeightPx' => $oSettings->GetValue('TopIframeHeightPx', ''),
 		);
 	}
+
+	private function _getUrlFromParts($aParts)
+	{
+		$sUrl = '';
+		if (!empty($aParts['scheme'])) {
+			$sUrl .= $aParts['scheme'] . ':';
+		}
+		if (!empty($aParts['user']) || !empty($aParts['host'])) {
+			$sUrl .= '//';
+		}	
+		if (!empty($aParts['user'])) {
+			$sUrl .= $aParts['user'];
+		}	
+		if (!empty($aParts['pass'])) {
+			$sUrl .= ':' . $aParts['pass'];
+		}
+		if (!empty($aParts['user'])) {
+			$sUrl .= '@';
+		}	
+		if (!empty($aParts['host'])) {
+			$sUrl .= $aParts['host'];
+		}
+		if (!empty($aParts['port'])) {
+			$sUrl .= ':' . $aParts['port'];
+		}	
+		if (!empty($aParts['path'])) {
+			$sUrl .= $aParts['path'];
+		}	
+		if (!empty($aParts['query'])) {
+			if (is_array($aParts['query'])) {
+				$sUrl .= '?' . http_build_query($aParts['query']);
+			} else {
+				$sUrl .= '?' . $aParts['query'];
+			}
+		}	
+		if (!empty($aParts['fragment'])) {
+			$sUrl .= '#' . $aParts['fragment'];
+		}
+
+		return $sUrl;
+	}
 	
 	private function _getUrlWithSeed($sUrl)
 	{
-		function _getUrlFromParts($aParts)
-		{
-			$sUrl = '';
-			if (!empty($aParts['scheme'])) {
-				$sUrl .= $aParts['scheme'] . ':';
-			}
-			if (!empty($aParts['user']) || !empty($aParts['host'])) {
-				$sUrl .= '//';
-			}	
-			if (!empty($aParts['user'])) {
-				$sUrl .= $aParts['user'];
-			}	
-			if (!empty($aParts['pass'])) {
-				$sUrl .= ':' . $aParts['pass'];
-			}
-			if (!empty($aParts['user'])) {
-				$sUrl .= '@';
-			}	
-			if (!empty($aParts['host'])) {
-				$sUrl .= $aParts['host'];
-			}
-			if (!empty($aParts['port'])) {
-				$sUrl .= ':' . $aParts['port'];
-			}	
-			if (!empty($aParts['path'])) {
-				$sUrl .= $aParts['path'];
-			}	
-			if (!empty($aParts['query'])) {
-				if (is_array($aParts['query'])) {
-					$sUrl .= '?' . http_build_query($aParts['query']);
-				} else {
-					$sUrl .= '?' . $aParts['query'];
-				}
-			}	
-			if (!empty($aParts['fragment'])) {
-				$sUrl .= '#' . $aParts['fragment'];
-			}
-
-			return $sUrl;
-		}
-		
 		$aParts = parse_url($sUrl);
 		$aQuery = [];
 		if (isset($aParts['query']) && is_string($aParts['query']) && !empty($aParts['query']))
@@ -128,7 +128,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 		$aQuery['datetimeseed'] = date('Y-m-d-H-i-s');
 		$aParts['query'] = http_build_query($aQuery);
 		
-		return _getUrlFromParts($aParts);
+		return $this->_getUrlFromParts($aParts);
 	}
 	/**
 	 * Updates module's settings - saves them to config.json file or to user settings in db.
@@ -137,6 +137,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	 */
 	public function UpdateSettings($LoginLogo, $TabsbarLogo, $TenantId = null)
 	{
+		$result = false;
 		$oSettings = $this->GetModuleSettings();
 		if (!empty($TenantId))
 		{
@@ -147,7 +148,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 			{
 				$oSettings->SetTenantValue($oTenant->Name, 'LoginLogo', $LoginLogo);		
 				$oSettings->SetTenantValue($oTenant->Name, 'TabsbarLogo', $TabsbarLogo);		
-				return $oSettings->SaveTenantSettings($oTenant->Name);
+				$result = $oSettings->SaveTenantSettings($oTenant->Name);
 			}
 		}
 		else
@@ -156,8 +157,10 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
 			$oSettings->SetValue('LoginLogo', $LoginLogo);
 			$oSettings->SetValue('TabsbarLogo', $TabsbarLogo);
-			return $oSettings->Save();
+			$result = $oSettings->Save();
 		}
+
+		return $result;
 	}
 
 	/***** public functions might be called with web API *****/
