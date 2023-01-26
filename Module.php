@@ -120,13 +120,16 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 	private function _getUrlWithSeed($sUrl)
 	{
 		$aParts = parse_url($sUrl);
-		$aQuery = [];
-		if (isset($aParts['query']) && is_string($aParts['query']) && !empty($aParts['query']))
-		{
-			parse_str($aParts['query'], $aQuery);
+
+		if (!empty($aParts['host']) || !empty($aParts['path'])) {
+			$aQuery = [];
+			if (isset($aParts['query']) && is_string($aParts['query']) && !empty($aParts['query']))
+			{
+				parse_str($aParts['query'], $aQuery);
+			}
+			$aQuery['datetimeseed'] = date('Y-m-d-H-i-s');
+			$aParts['query'] = http_build_query($aQuery);
 		}
-		$aQuery['datetimeseed'] = date('Y-m-d-H-i-s');
-		$aParts['query'] = http_build_query($aQuery);
 		
 		return $this->_getUrlFromParts($aParts);
 	}
