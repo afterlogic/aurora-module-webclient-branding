@@ -130,7 +130,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     }
     /**
      * Updates module's settings - saves them to config.json file or to user settings in db.
-     * @param int $ContactsPerPage Count of contacts per page.
+     * @param string $LoginLogo
+     * @param string $TabsbarLogo
+     * @param int $TenantId
      * @return boolean
      */
     public function UpdateSettings($LoginLogo, $TabsbarLogo, $TenantId = null)
