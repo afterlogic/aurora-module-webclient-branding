@@ -14,6 +14,8 @@ namespace Aurora\Modules\BrandingWebclient;
  * @license https://afterlogic.com/products/common-licensing Afterlogic Software License
  * @copyright Copyright (c) 2023, Afterlogic Corp.
  *
+ * @property Settings $oModuleSettings
+ *
  * @package Modules
  */
 class Module extends \Aurora\System\Module\AbstractWebclientModule
@@ -67,25 +69,24 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         $sLoginLogo = '';
         $sTabsbarLogo = '';
 
-        $oSettings = $this->getModuleSettings();
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
             $oTenant = \Aurora\System\Api::getTenantById($TenantId);
 
             if ($oTenant) {
-                $sLoginLogo = $oSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
-                $sTabsbarLogo = $oSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
+                $sLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
+                $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
             }
         } else {
-            $sLoginLogo = $oSettings->GetValue('LoginLogo', $sLoginLogo);
-            $sTabsbarLogo = $oSettings->GetValue('TabsbarLogo', $sTabsbarLogo);
+            $sLoginLogo = $this->oModuleSettings->GetValue('LoginLogo', $sLoginLogo);
+            $sTabsbarLogo = $this->oModuleSettings->GetValue('TabsbarLogo', $sTabsbarLogo);
         }
 
         return array(
             'LoginLogo' => $sLoginLogo,
             'TabsbarLogo' => $sTabsbarLogo,
-            'TopIframeUrl' => $this->_getUrlWithSeed($oSettings->GetValue('TopIframeUrl', '')),
-            'TopIframeHeightPx' => $oSettings->GetValue('TopIframeHeightPx', ''),
+            'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->GetValue('TopIframeUrl', '')),
+            'TopIframeHeightPx' => $this->oModuleSettings->GetValue('TopIframeHeightPx', ''),
         );
     }
 
