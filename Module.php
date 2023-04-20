@@ -163,20 +163,22 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     {
         $result = false;
         $oSettings = $this->getModuleSettings();
+
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
             $oTenant = \Aurora\System\Api::getTenantById($TenantId);
 
             if ($oTenant) {
-                $oSettings->SetTenantValue($oTenant->Name, 'LoginLogo', $LoginLogo);
-                $oSettings->SetTenantValue($oTenant->Name, 'TabsbarLogo', $TabsbarLogo);
-                $result = $oSettings->SaveTenantSettings($oTenant->Name);
+                $result = $oSettings->SaveTenantSettings($oTenant->Name, [
+                    'LoginLogo' => $LoginLogo,
+                    'TabsbarLogo' => $TabsbarLogo
+                ]);
             }
         } else {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
-
-            $oSettings->SetValue('LoginLogo', $LoginLogo);
-            $oSettings->SetValue('TabsbarLogo', $TabsbarLogo);
+            $oSettings->LoginLogo =  $LoginLogo;
+            $oSettings->TabsbarLogo = $TabsbarLogo;
+            
             $result = $oSettings->Save();
         }
 
