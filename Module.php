@@ -84,15 +84,15 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
             }
         } else {
-            $sLoginLogo = $this->oModuleSettings->GetValue('LoginLogo', $sLoginLogo);
-            $sTabsbarLogo = $this->oModuleSettings->GetValue('TabsbarLogo', $sTabsbarLogo);
+            $sLoginLogo = $this->oModuleSettings->LoginLogo;
+            $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
         }
 
         return array(
             'LoginLogo' => $sLoginLogo,
             'TabsbarLogo' => $sTabsbarLogo,
-            'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->GetValue('TopIframeUrl', '')),
-            'TopIframeHeightPx' => $this->oModuleSettings->GetValue('TopIframeHeightPx', ''),
+            'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->TopIframeUrl),
+            'TopIframeHeightPx' => $this->oModuleSettings->TopIframeHeightPx,
         );
     }
 
@@ -162,8 +162,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     public function UpdateSettings($LoginLogo, $TabsbarLogo, $TenantId = null)
     {
         $result = false;
-        $oSettings = $this->getModuleSettings();
-
+        $oSettings = $this->oModuleSettings;
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
             $oTenant = \Aurora\System\Api::getTenantById($TenantId);
