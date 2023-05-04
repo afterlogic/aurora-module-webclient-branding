@@ -54,17 +54,16 @@ export default {
   computed: {
     tenantId () {
       return this.$store.getters['tenants/getCurrentTenantId']
-    },
-
-    allTenants () {
-      return this.$store.getters['tenants/getTenants']
-    }
+    }, 
   },
 
   watch: {
-    allTenants () {
-      this.populate()
-    },
+    '$store.state.tenants.tenants': {
+      handler: function () {
+        this.populate()
+      },
+      deep: true
+    }
   },
 
   mounted () {
