@@ -177,7 +177,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
             $oSettings->LoginLogo =  $LoginLogo;
             $oSettings->TabsbarLogo = $TabsbarLogo;
-            
+
             $result = $oSettings->Save();
         }
 
