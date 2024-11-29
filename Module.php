@@ -60,43 +60,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         return $this->oModuleSettings;
     }
 
-    /***** private functions *****/
-
-    /***** public functions might be called with web API *****/
-    /**
-     * Obtains list of module settings for authenticated user.
-     *
-     * @return array
-     */
-    public function GetSettings($TenantId = null)
-    {
-        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
-
-        $sLoginLogo = '';
-        $sTabsbarLogo = '';
-
-        if (!empty($TenantId)) {
-            \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-            $oAuthenticatedUser = \Aurora\System\Api::getAuthenticatedUser();
-
-            $oTenant = \Aurora\System\Api::getTenantById($TenantId);
-            if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
-                $sLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
-                $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
-            }
-        } else {
-            $sLoginLogo = $this->oModuleSettings->LoginLogo;
-            $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
-        }
-
-        return array(
-            'LoginLogo' => $sLoginLogo,
-            'TabsbarLogo' => $sTabsbarLogo,
-            'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->TopIframeUrl),
-            'TopIframeHeightPx' => $this->oModuleSettings->TopIframeHeightPx,
-        );
-    }
-
     private function _getUrlFromParts($aParts)
     {
         $sUrl = '';
@@ -153,6 +116,44 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         return $this->_getUrlFromParts($aParts);
     }
+
+    /***** private functions *****/
+
+    /***** public functions might be called with web API *****/
+    /**
+     * Obtains list of module settings for authenticated user.
+     *
+     * @return array
+     */
+    public function GetSettings($TenantId = null)
+    {
+        \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::Anonymous);
+
+        $sLoginLogo = '';
+        $sTabsbarLogo = '';
+
+        if (!empty($TenantId)) {
+            \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
+            $oAuthenticatedUser = \Aurora\System\Api::getAuthenticatedUser();
+
+            $oTenant = \Aurora\System\Api::getTenantById($TenantId);
+            if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
+                $sLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
+                $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
+            }
+        } else {
+            $sLoginLogo = $this->oModuleSettings->LoginLogo;
+            $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
+        }
+
+        return array(
+            'LoginLogo' => $sLoginLogo,
+            'TabsbarLogo' => $sTabsbarLogo,
+            'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->TopIframeUrl),
+            'TopIframeHeightPx' => $this->oModuleSettings->TopIframeHeightPx,
+        );
+    }
+
     /**
      * Updates module's settings - saves them to config.json file or to user settings in db.
      * @param string $LoginLogo
