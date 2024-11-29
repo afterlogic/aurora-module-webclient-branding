@@ -77,13 +77,15 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
-            $oTenant = \Aurora\System\Api::getTenantById($TenantId);
+            $oAuthenticatedUser = \Aurora\System\Api::getAuthenticatedUser();
 
-            if ($oTenant) {
+            $oTenant = \Aurora\System\Api::getTenantById($TenantId);
+            if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
                 $sLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
                 $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
             }
         } else {
+            \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
             $sLoginLogo = $this->oModuleSettings->LoginLogo;
             $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
         }
@@ -166,8 +168,9 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
             $oTenant = \Aurora\System\Api::getTenantById($TenantId);
+            $oAuthenticatedUser = \Aurora\System\Api::getAuthenticatedUser();
 
-            if ($oTenant) {
+            if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
                 $result = $oSettings->SaveTenantSettings($oTenant->Name, [
                     'LoginLogo' => $LoginLogo,
                     'TabsbarLogo' => $TabsbarLogo
