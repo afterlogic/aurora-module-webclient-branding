@@ -85,7 +85,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
                 $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
             }
         } else {
-            \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
             $sLoginLogo = $this->oModuleSettings->LoginLogo;
             $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
         }
