@@ -22,21 +22,6 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 {
     /***** private functions *****/
     /**
-     * Initializes module.
-     *
-     * @ignore
-     */
-    public function init()
-    {
-        $oUser = \Aurora\System\Api::getAuthenticatedUser();
-
-        //if (!empty($oUser) && $oUser->Role === \Aurora\System\Enums\UserRole::SuperAdmin)
-        // {
-        //$this->includeTemplate('StandardAuthWebclient_StandardAccountsSettingsFormView', 'Edit-Standard-Account-After', 'templates/AccountPasswordHintView.html', $this->sName);
-        // }
-    }
-
-    /**
      * @return Module
      */
     public static function getInstance()
@@ -123,6 +108,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
     /**
      * Obtains list of module settings for authenticated user.
      *
+     * @param int|null $TenantId Tenant ID
      * @return array
      */
     public function GetSettings($TenantId = null)
@@ -156,6 +142,7 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
     /**
      * Updates module's settings - saves them to config.json file or to user settings in db.
+     *
      * @param string $LoginLogo
      * @param string $TabsbarLogo
      * @param int $TenantId
