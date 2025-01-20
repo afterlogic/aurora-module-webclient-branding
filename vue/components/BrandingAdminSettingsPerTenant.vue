@@ -20,7 +20,7 @@
           </div>
         </q-card-section>
       </q-card>
-      <div class="q-pa-md text-right">
+      <div class="q-pt-md text-right">
         <q-btn unelevated no-caps dense class="q-px-sm" :ripple="false" color="primary"
                :label="$t('COREWEBCLIENT.ACTION_SAVE')"
                @click="save"/>
