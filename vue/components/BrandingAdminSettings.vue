@@ -12,10 +12,22 @@
               <q-input outlined dense bg-color="white" v-model="loginLogoUrl"/>
             </div>
           </div>
-          <div class="row">
+          <div class="row q-mb-md">
             <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.TABSBAR_LOGO_URL_LABEL'"></div>
             <div class="col-5">
               <q-input outlined dense bg-color="white" v-model="tabsBarLogoUrl"/>
+            </div>
+          </div>
+          <div class="row q-mb-md">
+            <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.MOBILE_LOGIN_LOGO_URL_LABEL'"></div>
+            <div class="col-5">
+              <q-input outlined dense bg-color="white" v-model="mobileLoginLogoUrl"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.PRODUCT_NAME_LABEL'"></div>
+            <div class="col-5">
+              <q-input outlined dense bg-color="white" v-model="productName"/>
             </div>
           </div>
         </q-card-section>
@@ -46,6 +58,8 @@ export default {
     return {
       loginLogoUrl: '',
       tabsBarLogoUrl: '',
+      mobileLoginLogoUrl: '',
+      productName: '',
       saving: false,
     }
   },
@@ -66,7 +80,9 @@ export default {
     hasChanges () {
       const data = settings.getBrandingsSettings()
       return this.loginLogoUrl !== data.loginLogo ||
-          this.tabsBarLogoUrl !== data.tabsbarLogo
+          this.tabsBarLogoUrl !== data.tabsbarLogo ||
+          this.mobileLoginLogoUrl !== data.mobileLoginLogo ||
+          this.productName !== data.productName
     },
 
     /**
@@ -82,6 +98,8 @@ export default {
       const data = settings.getBrandingsSettings()
       this.loginLogoUrl = data.loginLogo
       this.tabsBarLogoUrl = data.tabsbarLogo
+      this.mobileLoginLogoUrl = data.mobileLoginLogo
+      this.productName = data.productName
     },
     saveBrandingSettings () {
       if (!this.saving) {
@@ -89,6 +107,8 @@ export default {
         const parameters = {
           LoginLogo: this.loginLogoUrl,
           TabsbarLogo: this.tabsBarLogoUrl,
+          MobileLoginLogo: this.mobileLoginLogoUrl,
+          ProductName: this.productName,
         }
         webApi.sendRequest({
           moduleName: 'BrandingWebclient',
@@ -100,6 +120,8 @@ export default {
             settings.saveBrandingsSettings({
               loginLogo: parameters.LoginLogo,
               tabsbarLogo: parameters.TabsbarLogo,
+              mobileLoginLogo: parameters.MobileLoginLogo,
+              productName: parameters.ProductName,
             })
             this.populate()
             notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))

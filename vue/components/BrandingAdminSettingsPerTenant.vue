@@ -12,10 +12,22 @@
               <q-input outlined dense bg-color="white" v-model="loginLogoUrl"/>
             </div>
           </div>
-          <div class="row">
+          <div class="row q-mb-md">
             <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.TABSBAR_LOGO_URL_LABEL'"></div>
             <div class="col-5">
               <q-input outlined dense bg-color="white" v-model="tabsBarLogoUrl"/>
+            </div>
+          </div>
+          <div class="row q-mb-md">
+            <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.MOBILE_LOGIN_LOGO_URL_LABEL'"></div>
+            <div class="col-5">
+              <q-input outlined dense bg-color="white" v-model="mobileLoginLogoUrl"/>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2 q-mt-sm" v-t="'BRANDINGWEBCLIENT.PRODUCT_NAME_LABEL'"></div>
+            <div class="col-5">
+              <q-input outlined dense bg-color="white" v-model="productName"/>
             </div>
           </div>
         </q-card-section>
@@ -45,6 +57,8 @@ export default {
     return {
       loginLogoUrl: '',
       tabsBarLogoUrl: '',
+      mobileLoginLogoUrl: '',
+      productName: '',
       saving: false,
       loading: false,
       tenant: null
@@ -87,7 +101,9 @@ export default {
 
       const tenantCompleteData = types.pObject(this.tenant?.completeData)
       return this.loginLogoUrl !== tenantCompleteData['BrandingWebclient::LoginLogo'] ||
-          this.tabsBarLogoUrl !== tenantCompleteData['BrandingWebclient::TabsbarLogo']
+          this.tabsBarLogoUrl !== tenantCompleteData['BrandingWebclient::TabsbarLogo'] ||
+          this.mobileLoginLogoUrl !== tenantCompleteData['BrandingWebclient::MobileLoginLogo'] ||
+          this.productName !== tenantCompleteData['BrandingWebclient::ProductName']
     },
 
     /**
@@ -106,6 +122,8 @@ export default {
           this.tenant = tenant
           this.loginLogoUrl = tenant.completeData['BrandingWebclient::LoginLogo']
           this.tabsBarLogoUrl = tenant.completeData['BrandingWebclient::TabsbarLogo']
+          this.mobileLoginLogoUrl = tenant.completeData['BrandingWebclient::MobileLoginLogo']
+          this.productName = tenant.completeData['BrandingWebclient::ProductName']
         } else {
           this.getSettings()
         }
@@ -118,6 +136,8 @@ export default {
         const parameters = {
           LoginLogo: this.loginLogoUrl,
           TabsbarLogo: this.tabsBarLogoUrl,
+          MobileLoginLogo: this.mobileLoginLogoUrl,
+          ProductName: this.productName,
           TenantId: this.tenantId
         }
         webApi.sendRequest({
@@ -130,6 +150,8 @@ export default {
             const data = {
               'BrandingWebclient::LoginLogo': parameters.LoginLogo,
               'BrandingWebclient::TabsbarLogo': parameters.TabsbarLogo,
+              'BrandingWebclient::MobileLoginLogo': parameters.MobileLoginLogo,
+              'BrandingWebclient::ProductName': parameters.ProductName,
             }
             this.$store.commit('tenants/setTenantCompleteData', { id: this.tenantId, data })
             notification.showReport(this.$t('COREWEBCLIENT.REPORT_SETTINGS_UPDATE_SUCCESS'))
@@ -158,6 +180,8 @@ export default {
           const data = {
             'BrandingWebclient::LoginLogo': types.pString(result.LoginLogo),
             'BrandingWebclient::TabsbarLogo': types.pString(result.TabsbarLogo),
+            'BrandingWebclient::MobileLoginLogo': types.pString(result.MobileLoginLogo),
+            'BrandingWebclient::ProductName': types.pString(result.ProductName),
           }
           this.$store.commit('tenants/setTenantCompleteData', { id: this.tenantId, data })
         }

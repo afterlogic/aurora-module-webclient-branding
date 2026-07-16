@@ -117,6 +117,8 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
 
         $sLoginLogo = '';
         $sTabsbarLogo = '';
+        $sMobileLoginLogo = '';
+        $sProductName = '';
 
         if (!empty($TenantId)) {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::TenantAdmin);
@@ -126,15 +128,21 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
                 $sLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'LoginLogo', $sLoginLogo);
                 $sTabsbarLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'TabsbarLogo', $sTabsbarLogo);
+                $sMobileLoginLogo = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'MobileLoginLogo', $sMobileLoginLogo);
+                $sProductName = $this->oModuleSettings->GetTenantValue($oTenant->Name, 'ProductName', $sProductName);
             }
         } else {
             $sLoginLogo = $this->oModuleSettings->LoginLogo;
             $sTabsbarLogo = $this->oModuleSettings->TabsbarLogo;
+            $sMobileLoginLogo = $this->oModuleSettings->MobileLoginLogo;
+            $sProductName = $this->oModuleSettings->ProductName;
         }
 
         return array(
             'LoginLogo' => $sLoginLogo,
             'TabsbarLogo' => $sTabsbarLogo,
+            'MobileLoginLogo' => $sMobileLoginLogo,
+            'ProductName' => $sProductName,
             'TopIframeUrl' => $this->_getUrlWithSeed($this->oModuleSettings->TopIframeUrl),
             'TopIframeHeightPx' => $this->oModuleSettings->TopIframeHeightPx,
         );
@@ -145,10 +153,12 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
      *
      * @param string $LoginLogo
      * @param string $TabsbarLogo
+     * @param string $MobileLoginLogo
+     * @param string $ProductName
      * @param int $TenantId
      * @return boolean
      */
-    public function UpdateSettings($LoginLogo, $TabsbarLogo, $TenantId = null)
+    public function UpdateSettings($LoginLogo, $TabsbarLogo, $MobileLoginLogo = '', $ProductName = '', $TenantId = null)
     {
         $result = false;
         $oSettings = $this->oModuleSettings;
@@ -160,13 +170,17 @@ class Module extends \Aurora\System\Module\AbstractWebclientModule
             if ($oTenant && ($oAuthenticatedUser->isAdmin() || $oAuthenticatedUser->IdTenant === $oTenant->Id)) {
                 $result = $oSettings->SaveTenantSettings($oTenant->Name, [
                     'LoginLogo' => $LoginLogo,
-                    'TabsbarLogo' => $TabsbarLogo
+                    'TabsbarLogo' => $TabsbarLogo,
+                    'MobileLoginLogo' => $MobileLoginLogo,
+                    'ProductName' => $ProductName
                 ]);
             }
         } else {
             \Aurora\System\Api::checkUserRoleIsAtLeast(\Aurora\System\Enums\UserRole::SuperAdmin);
             $oSettings->LoginLogo =  $LoginLogo;
             $oSettings->TabsbarLogo = $TabsbarLogo;
+            $oSettings->MobileLoginLogo = $MobileLoginLogo;
+            $oSettings->ProductName = $ProductName;
 
             $result = $oSettings->Save();
         }

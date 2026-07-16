@@ -8,12 +8,16 @@ class BrandingSettings {
     if (!_.isEmpty(brandingWebclientData)) {
       this.loginLogo = brandingWebclientData.LoginLogo
       this.tabsbarLogo = brandingWebclientData.TabsbarLogo
+      this.mobileLoginLogo = brandingWebclientData.MobileLoginLogo
+      this.productName = brandingWebclientData.ProductName
     }
   }
 
-  saveBrandingsSettings ({ loginLogo, tabsbarLogo }) {
+  saveBrandingsSettings ({ loginLogo, tabsbarLogo, mobileLoginLogo, productName }) {
     this.loginLogo = loginLogo
     this.tabsbarLogo = tabsbarLogo
+    this.mobileLoginLogo = mobileLoginLogo
+    this.productName = productName
   }
 }
 
@@ -30,6 +34,8 @@ export default {
     return {
       loginLogo: settings?.loginLogo,
       tabsbarLogo: settings?.tabsbarLogo,
+      mobileLoginLogo: settings?.mobileLoginLogo,
+      productName: settings?.productName,
     }
   },
 

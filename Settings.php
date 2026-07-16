@@ -13,6 +13,8 @@ use Aurora\System\SettingsProperty;
  * @property bool $Disabled
  * @property string $LoginLogo
  * @property string $TabsbarLogo
+ * @property string $MobileLoginLogo
+ * @property string $ProductName
  * @property string $TopIframeUrl
  * @property int $TopIframeHeightPx
  */
@@ -39,6 +41,18 @@ class Settings extends \Aurora\System\Module\Settings
                 "string",
                 null,
                 "URL of logo image used in top left corner of main interface",
+            ),
+            "MobileLoginLogo" => new SettingsProperty(
+                "",
+                "string",
+                null,
+                "URL of logo image used on login page of mobile layout",
+            ),
+            "ProductName" => new SettingsProperty(
+                "",
+                "string",
+                null,
+                "Product name displayed on login page of mobile layout",
             ),
             "TopIframeUrl" => new SettingsProperty(
                 "",
